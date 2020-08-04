@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<!DOCTYPE css>
+
 <html>
 <head>
-<title>html로 페이지 만들기</title>
 <meta charset="utf-8">
 </head>
 <body>
