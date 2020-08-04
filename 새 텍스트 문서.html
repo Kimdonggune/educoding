@@ -1,0 +1,332 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<meta name="_csrf" content="874cb81d-a3be-458b-9bc8-3c8d46c7aeca" />
+<meta name="_csrf_header" content="X-CSRF-TOKEN" />
+<title>직무관리시스템 Login</title>
+
+<style>
+/*
+@import url(common/font.css);
+*/
+
+
+*, input, button {margin: 0;padding: 0;font-family: "Noto Sans KR", "나눔고딕", sans-serif;}
+.loginbody{
+	display:flex;
+	height:100vh;
+	align-items:center;
+	width:100%;
+	background:#f7f7f7 url(img/loginbg.gif) 50% 50% no-repeat;
+}
+
+.box{
+	width:740px;height:520px;margin:auto auto;
+/*
+	text-align:left;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);*/
+}
+.box h3{
+/*	color:#54585a;
+	text-align:left;
+	padding:10px 0;
+	letter-spacing:-0.05em;font-size:22px;font-weight:500;*/
+/* 	background:url(img/login_tlogo.gif) 0 50% no-repeat; */
+	height:70px;
+}
+.loginfooter{	
+	color:#8f9191;
+	line-height:70px;
+	font-size:14px;font-weight:600;
+	/* background:url(img/login_blogo.gif) 0 50% no-repeat;  */
+	padding:0 0 0 165px;  
+}
+
+.loginbox {
+	width: 740px;
+	height: 380px;	
+	box-sizing: border-box;  
+	/*padding-left:400px;*/
+	background:#fff;	
+	box-shadow: 15px 15px 30px 3px rgba(0, 0, 0, 0.15);
+	-moz-border-radius: 5px; /*모질라*/ 
+	-webkit-border-radius: 7px; /*웹킷*/ /*IE9+,FF4+,chrome,Safari5,+opera*/ 
+	border-radius: 7px;
+	text-align:left;
+	background:#fff url(img/login_img.jpg) 0 0 no-repeat;
+	display:flex; align-items:center;
+ }
+ .loginimg{width:400px;text-align:center;color:#fff;font-size:14px;/* margin:130px 0 0; */margin:-80px 0 0;font-family: "나눔고딕", sans-serif;line-height:140%;}
+.logininputarea{	
+	width:260px;
+	margin:auto;	
+}
+.logininputarea p{
+	margin:0 0 25px;
+	text-align:left;font-weight:600;font-size:20px;
+	}
+.box .logininputarea input{
+	border:1px solid #e5e5e5;border-radius: 3px;
+	padding:8px 35px 10px;	
+	margin:7px 0;
+	width:260px;box-sizing: border-box;
+	color:#000;font-size:15px;
+}
+.loginid{background:url(img/login_id.gif) 50% 50% no-repeat;}
+.loginpw{background:url(img/login_pw.gif) 50% 50% no-repeat;}
+.btnlogin {
+	background-color: #8f9191;
+	border: none;
+	color:#fff;font-weight:600;
+	font-size: 12px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;	
+	margin: 20px 0 0;
+	cursor: pointer;
+	border-radius:3px;
+	font-family: "Noto Sans KR", sans-serif;
+	/*  padding: 8px 12px 10px;*/
+	width:260px;line-height:35px;
+	display:block;
+	-webkit-transition: all .05s;
+	transition: all 0.5s;
+}
+.btnlogin:hover {
+	background-color: #7da6ed;
+}
+.btnlogin:active {
+    position:relative;
+    top:1px;
+}
+
+
+    .loginId {
+        cursor: pointer;
+    }
+    table {
+        float: left;
+        margin-right: 50px;
+    }
+    th {
+        border: 1px solid black;
+    }
+    td {
+        border: 1px solid black;
+    } 
+    
+</style>
+<script src="/js/jquery-3.2.1.min.js"></script>
+<script>
+
+
+
+	function getLoginLogo(companyCd) {
+		
+		
+		
+        $.ajax({
+
+            url: '/super/getLogoImage',
+            async: true,  
+            type: 'GET',    
+            data: { 
+                PARAM_COMPANY_CD: companyCd,
+                FILE_NAME: 'login_logo.gif'
+            }, 
+            dataType: 'json', 
+            beforeSend: function(jqXHR) {
+            },
+            success: function(result) {                    
+                var dataUrl = result.data;                
+                $("#loginLogo").attr('src', dataUrl); 
+            }, 
+            error: function(jqXHR) {
+                console.log('error');
+                console.log(jqXHR);
+            }, 
+            complete: function(jqXHR) {
+                console.log('complete');
+                console.log(jqXHR);
+            } 
+
+        });		
+	}
+
+    $(document).ready(       	    		    		
+        function() {
+        	 
+        	//년도 구하기
+        	$("#footerYear").html(new Date().getFullYear()); 
+        	    	        	
+        	var companyCd = getUrlParameter("companyCd");
+        	if (companyCd == null || companyCd == '' || companyCd == undefined) {
+        		if ('' == '') {
+        			
+        		}	else {
+        			companyCd = '';
+        	
+        		}
+        			 
+        	}
+        	
+        	$("#companyCd").val(companyCd);  
+        	
+        	if (!isNull(companyCd)) {
+        		getLoginLogo(companyCd); 
+        		$.ajax({
+
+                    url: '/super/getCompanyInfo',
+                    async: true,  
+                    type: 'GET',    
+                    data: { 
+                    	PARAM_COMPANY_CD: companyCd
+                    }, 
+                    dataType: 'json', 
+                    beforeSend: function(jqXHR) {
+                    },
+                    success: function(result) {
+                    	console.log(result);        
+                    	if (result.USE_YN != 'N') {
+                    		$("#btnLogin").prop('disabled', false);
+                    	}
+                        $(".companyNm").html(result.COMPANY_NM);    
+                        $("#btnLogin").prop('disabled', false);
+                    }, 
+                    error: function(jqXHR) {
+                        console.log('error');
+                        console.log(jqXHR);
+                    }, 
+                    complete: function(jqXHR) {
+                        console.log('complete');
+                        console.log(jqXHR);
+                    } 
+
+                });
+        	} else {  
+        		//고객사 코드 없으면 그냥 활성화        	    
+        		$("#btnLogin").prop('disabled', false);
+        		$("#loginLogo").attr('src', "/img/basic_login_logo.gif"); 
+        	
+        	}
+
+        	   
+        	
+        	 
+        	var isInFrame = (window.location != window.parent.location);
+        	if (isInFrame) {
+        		alert("로그인 정보가 없습니다.");
+        		window.parent.location.href = '/login';
+        		return;
+        	}
+        	
+        	
+        	var empNo = '';  
+        	if (empNo != '') {
+        		location.href = '/main';
+        		return;
+        	}
+            if (location.href.indexOf("error") > -1) {
+                var strFailReason = '';
+                alert(strFailReason);
+            }
+            
+    
+        }); 
+    
+
+    function login() {
+        var companyCd = $("#companyCd").val();
+
+    	 
+        var loginForm = document.getElementById("loginForm");
+        var id = $("#ID").val();
+        var password = $("#Password").val(); 
+       
+        if (id == '' || password == '') { 
+            alert("정보를 입력하세요.");
+            return; 
+        }
+
+        loginForm.submit();
+
+    }
+    
+    function isNull(v) {
+        return (v === undefined || v === null || (new String(v)).length == 0) ? true : false;
+    }
+    
+    function getUrlParameter(paramName) {      
+        var url = document.location.href;
+  
+        if(url.indexOf("?") > -1) {
+           var splits = url.split("?"); 
+           var gets = splits[1];             
+           var para = gets.split("&");
+           var len  = para.length;            
+           for(var i=0; i<len; i++) {
+              var param = para[i].split("=");
+              var name  = param[0];
+              var value = param[1];
+              if (name == paramName) {
+                  if (value == "null" || value == "undefined") {
+                     value = "";
+                  }
+                  value = value.replace("#noback", "");
+                  return decodeURI(value); 
+              }
+           }
+        }
+        return null; 
+
+     }
+    
+    
+    
+
+    
+    
+    
+</script>
+</head>
+<body>
+<div class="loginbody">
+<div class="box"> 
+	<h3><img id="loginLogo" style="width: 252px; height: 60px;"/></h3>
+	<div class="loginbox">
+	   <div class="loginimg"><span class="companyNm"><!-- 롯데아사히주류 --></span> 구성원 여러분들의 직무를<br/>체계적으로 관리하는 직무관리 전산시스템입니다.</div> 
+		<div class="logininputarea">
+			<p>Member's Login</p>
+
+				
+			<form method="POST" id="loginForm" action="/authenticate" onkeydown="if (event.keyCode == 13) login();" >
+			 <input type="hidden" name="_csrf" value="874cb81d-a3be-458b-9bc8-3c8d46c7aeca">
+
+				<input type="text" name="ID" id="ID" class="loginid"></input>
+				<input type="password" name="Password" id="Password" class="loginpw"></input>
+                <input type="hidden" name="companyCd" id="companyCd"></input> 
+			</form>
+  
+				<button class="btnlogin" id="btnLogin" onclick="login();" disabled="disabled">LOGIN</button>
+				<p style="font-size:12px;margin-top:20px;font-weight:normal;letter-spacing:-0.05em;">* 본 시스템은 크롬 화면에 최적화되어 있습니다.</p>
+
+		</div>
+	</div>  
+	<p class="loginfooter"><span class="companyNm" style="font-size: larger;"><!-- 롯데아사히주류 --></span> Copyright (C) <span id="footerYear"></span> SYNERGY PARTNERS Inc. All Rights Reserved.</p>
+</div>
+</div>  
+</body>
+
+</html>  
